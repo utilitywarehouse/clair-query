@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+CLAIR_HOST=${CLAIR_HOST:-"https://clair.exp-1.aws.uw.systems"}
+DOCKER_AUTH_CONFIG=${DOCKER_AUTH_CONFIG:-"{\"auths\":{}}"}
+
+mkdir -p "${HOME}"/.docker
+echo "${DOCKER_AUTH_CONFIG}" >"${HOME}"/.docker/config.json
+
+clairctl report --host "${CLAIR_HOST}" "${QUERY_REPO}" >report
+
+if ! [ -s report ]; then
+  echo "ERROR: could't get a vulnerability report"
+  exit 1
+fi
+
+found=$(grep -c ' found ' report)
+
+if [ $found -gt 0 ]; then
+  cat report
+  exit 1
+else
+  echo "OK: No vulnerabilities found"
+fi
