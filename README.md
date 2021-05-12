@@ -3,7 +3,7 @@ Small clairctl wrapper to be used in DroneCI
 
 ## Usage
 Add as a step in your pipeline. If needed, provide a docker config with auth
-credentials to the repository
+credentials to the repository (format like `'{"auths":{"myregistry.io":{"auth":"XXXXXXXXXXXX="}}}'`)
 
 ```
 kind: pipeline
@@ -14,6 +14,7 @@ steps:
   - name: vulnerability-scanning
     image: quay.io/utilitywarehouse/clair-query
     environment:
-      QUERY_REPO: myregistry.io/org/repo
-      DOCKER_AUTH_CONFIG: '{"auths":{"myregistry.io":{"auth":"XXXXXXXXXXXX="}}}'
+      QUERY_REPO: myregistry.io/org/repo:tag
+      DOCKER_AUTH_CONFIG:
+        from_secret: DOCKER_AUTH_CONFIG
 ```

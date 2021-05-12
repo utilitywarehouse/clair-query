@@ -11,8 +11,8 @@ steps:
   - name: define-image-tags
     image: alpine
     commands:
+      - test -n "${DRONE_BRANCH}" && echo -n "${DRONE_BRANCH}," > .tags || true
       - test "${DRONE_BRANCH}" == "master" && echo -n "latest,${DRONE_COMMIT}," > .tags || true
-      - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," > .tags || true
       - test -n "${DRONE_TAG}" && echo -n "${DRONE_TAG}," >> .tags || true
       - sed -i "s/,$//" .tags
 
@@ -29,7 +29,7 @@ steps:
   - name: vulnerability-scanning
     image: quay.io/utilitywarehouse/clair-query
     environment:
-      QUERY_REPO: quay.io/${DRONE_REPO}
+      QUERY_REPO: quay.io/${DRONE_REPO}:${DRONE_BRANCH}
 
 trigger:
   event:
