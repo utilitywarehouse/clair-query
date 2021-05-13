@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+: "${QUERY_REPO:?Variable not set or empty}"
 CLAIR_HOST=${CLAIR_HOST:-"http://clair.sys-clair:6060"}
 DOCKER_AUTH_CONFIG=${DOCKER_AUTH_CONFIG:-"{\"auths\":{}}"}
+
+echo "Scanning ${QUERY_REPO} with ${CLAIR_HOST}"
 
 mkdir -p "${HOME}"/.docker
 echo "${DOCKER_AUTH_CONFIG}" >"${HOME}"/.docker/config.json
