@@ -12,7 +12,7 @@ name: default
 
 steps:
   - name: vulnerability-scanning
-    image: quay.io/utilitywarehouse/clair-query
+    image: quay.io/utilitywarehouse/clair-query:4.0.5-1
     environment:
       QUERY_REPO: myregistry.io/org/repo:tag
       DOCKER_AUTH_CONFIG:

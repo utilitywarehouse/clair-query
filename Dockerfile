@@ -1,4 +1,4 @@
-FROM quay.io/utilitywarehouse/clair
+FROM quay.io/utilitywarehouse/clair:4.0.5-uw.patch
 
 RUN apk --no-cache add bash
 
