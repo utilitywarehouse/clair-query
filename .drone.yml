@@ -12,7 +12,7 @@ steps:
     image: alpine
     commands:
       - test -n "${DRONE_BRANCH}" && echo -n "${DRONE_BRANCH}," > .tags || true
-      - test "${DRONE_BRANCH}" == "master" && echo -n "latest,${DRONE_COMMIT}," > .tags || true
+      - test "${DRONE_BRANCH}" == "master" && echo -n "latest,${DRONE_COMMIT}," >> .tags || true
       - test -n "${DRONE_TAG}" && echo -n "${DRONE_TAG}," >> .tags || true
       - sed -i "s/,$//" .tags
 
