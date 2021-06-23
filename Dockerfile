@@ -1,6 +1,6 @@
-FROM quay.io/utilitywarehouse/clair:4.0.5-uw.patch
+FROM quay.io/projectquay/clair:4.1.1
 
-RUN apk --no-cache add bash
+USER root
 
 COPY query /usr/local/bin/query
 
