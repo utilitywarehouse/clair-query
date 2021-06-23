@@ -11,8 +11,10 @@ build:
 expose-clair:
 	kubectl --context=prod-merit -n sys-clair port-forward svc/clair 6060
 
-.PHONY: generate-random-private-image
-generate-random-private-image:
+# This target is not intended to be called directly by users, since it's
+# a modifier for the "run" target
+.PHONY: .generate-random-private-image
+.generate-random-private-image:
 	$(eval REPO := registry.uw.systems/system/clair-query-test)
 	$(eval TAG := $(shell uuidgen))
 	echo $(TAG) > test/random.txt
@@ -27,4 +29,4 @@ run:
 test: build run
 
 .PHONY: test-full
-test-full: build generate-random-private-image run
+test-full: build .generate-random-private-image run
