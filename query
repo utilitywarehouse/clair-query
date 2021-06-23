@@ -4,12 +4,20 @@
 CLAIR_HOST=${CLAIR_HOST:-"http://clair.sys-clair:6060"}
 DOCKER_AUTH_CONFIG=${DOCKER_AUTH_CONFIG:-"{\"auths\":{}}"}
 
-echo "Scanning ${QUERY_REPO} with ${CLAIR_HOST}"
+if [[ ${QUERY_TAG} == "" ]]; then
+  if test -f ".tags"; then
+    QUERY_TAG=$(cat .tags | cut -d ',' -f1)
+  else
+    QUERY_TAG=latest
+  fi
+fi
+
+echo "Scanning ${QUERY_REPO}:${QUERY_TAG} with ${CLAIR_HOST}"
 
 mkdir -p "${HOME}"/.docker
 echo "${DOCKER_AUTH_CONFIG}" >"${HOME}"/.docker/config.json
 
-clairctl report --host "${CLAIR_HOST}" "${QUERY_REPO}" >report
+clairctl report --host "${CLAIR_HOST}" "${QUERY_REPO}":"${QUERY_TAG}" >report
 
 if ! [ -s report ]; then
   echo "ERROR: could't get a vulnerability report"
