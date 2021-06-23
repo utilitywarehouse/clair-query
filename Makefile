@@ -21,12 +21,14 @@ expose-clair:
 	docker build -f test/Dockerfile -t $(REPO):$(TAG) .
 	docker push $(REPO):$(TAG)
 
-.PHONY: run
-run:
+# This target is not intended to be called directly by users, since it
+# should go after the "build" target
+.PHONY: .run
+.run:
 	docker run --rm -ti --add-host=host.docker.internal:host-gateway -e DOCKER_AUTH_CONFIG=$${DOCKER_AUTH_CONFIG} -e QUERY_REPO=$(REPO):$(TAG) -e CLAIR_HOST=http://host.docker.internal:6060 clair-query
 
 .PHONY: test
-test: build run
+test: build .run
 
 .PHONY: test-full
-test-full: build .generate-random-private-image run
+test-full: build .generate-random-private-image .run
