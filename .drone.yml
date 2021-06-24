@@ -17,6 +17,12 @@ steps:
   #    - test "${DRONE_BRANCH}" == "master" && echo -n "latest," >> .tags || true
   #    - sed -i "s/,$//" .tags
 
+  - name: test
+    image: banana
+    pull: never
+    commands:
+      - echo bar
+
   - name: build-and-publish
     image: plugins/docker
     settings:
@@ -43,17 +49,6 @@ steps:
   #      path: /var/run/docker.sock
   #  commands:
   #    - docker build -t foo:latest .
-
-  - name: test
-    image: foo:test
-    pull: never
-    commands:
-      - echo bar
-        #
-        #volumes:
-        #  - name: dockersock
-        #    host:
-        #      path: /var/run/docker.sock
 
 trigger:
   event:
