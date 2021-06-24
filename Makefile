@@ -25,7 +25,7 @@ expose-clair:
 # should go after the "build" target
 .PHONY: .run
 .run:
-	docker run --rm -ti --add-host=host.docker.internal:host-gateway -e DOCKER_AUTH_CONFIG=$${DOCKER_AUTH_CONFIG} -e QUERY_REPO=$(REPO):$(TAG) -e CLAIR_HOST=http://host.docker.internal:6060 clair-query
+	docker run --rm -ti --add-host=host.docker.internal:host-gateway -e DOCKER_AUTH_CONFIG=$${DOCKER_AUTH_CONFIG} -e QUERY_REPO=$(REPO) -e QUERY_TAG=$(TAG) -e CLAIR_HOST=http://host.docker.internal:6060 clair-query
 
 .PHONY: test
 test: build .run
