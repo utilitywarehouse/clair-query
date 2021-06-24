@@ -46,7 +46,7 @@ steps:
 
   - name: test
     image: foo:test
-    pull: if-not-exists
+    pull: never
     commands:
       - echo bar
         #
