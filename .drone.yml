@@ -3,52 +3,11 @@ type: kubernetes
 name: default
 
 steps:
-  #- name: fetch-with-tags
-  #  image: docker:git
-  #  commands:
-  #    - git fetch --tags
-
-  #- name: define-image-tags
-  #  image: alpine
-  #  commands:
-  #    - echo -n "bob," >> .tags || true
-  #    - test -n "${DRONE_TAG}" && echo -n "${DRONE_TAG}," >> .tags || true
-  #    - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," >> .tags || true
-  #    - test "${DRONE_BRANCH}" == "master" && echo -n "latest," >> .tags || true
-  #    - sed -i "s/,$//" .tags
-
   - name: test
-    image: banana
+    image: alpine
     pull: never
     commands:
       - echo bar
-
-  - name: build-and-publish
-    image: plugins/docker
-    settings:
-      #username:
-      #  from_secret: DOCKER_USERNAME
-      #password:
-      #  from_secret: DOCKER_PASSWORD
-      repo: foo
-      tags:
-        - test
-      dry_run: true
-      purge: false
-      #registry: quay.io
-
-  #- name: vulnerability-scanning
-  #  image: quay.io/utilitywarehouse/clair-query:update
-  #  environment:
-  #    QUERY_REPO: quay.io/${DRONE_REPO}
-  #
-  #- name: build
-  #  image: docker
-  #  volumes:
-  #    - name: dockersock
-  #      path: /var/run/docker.sock
-  #  commands:
-  #    - docker build -t foo:latest .
 
 trigger:
   event:
