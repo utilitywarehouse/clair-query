@@ -17,15 +17,16 @@ steps:
   #    - test "${DRONE_BRANCH}" == "master" && echo -n "latest," >> .tags || true
   #    - sed -i "s/,$//" .tags
 
-  #- name: build-and-publish
-  #  image: plugins/docker
-  #  settings:
-  #    username:
-  #      from_secret: DOCKER_USERNAME
-  #    password:
-  #      from_secret: DOCKER_PASSWORD
-  #    repo: quay.io/${DRONE_REPO}
-  #    registry: quay.io
+  - name: build-and-publish
+    image: plugins/docker
+    settings:
+      #username:
+      #  from_secret: DOCKER_USERNAME
+      #password:
+      #  from_secret: DOCKER_PASSWORD
+      repo: foo
+      dry_run: true
+      #registry: quay.io
 
   #- name: vulnerability-scanning
   #  image: quay.io/utilitywarehouse/clair-query:update
