@@ -1,35 +1,55 @@
 kind: pipeline
-type: kubernetes
+type: docker
 name: default
 
 steps:
-  - name: fetch-with-tags
-    image: docker:git
+  #- name: fetch-with-tags
+  #  image: docker:git
+  #  commands:
+  #    - git fetch --tags
+
+  #- name: define-image-tags
+  #  image: alpine
+  #  commands:
+  #    - echo -n "bob," >> .tags || true
+  #    - test -n "${DRONE_TAG}" && echo -n "${DRONE_TAG}," >> .tags || true
+  #    - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," >> .tags || true
+  #    - test "${DRONE_BRANCH}" == "master" && echo -n "latest," >> .tags || true
+  #    - sed -i "s/,$//" .tags
+
+  #- name: build-and-publish
+  #  image: plugins/docker
+  #  settings:
+  #    username:
+  #      from_secret: DOCKER_USERNAME
+  #    password:
+  #      from_secret: DOCKER_PASSWORD
+  #    repo: quay.io/${DRONE_REPO}
+  #    registry: quay.io
+
+  #- name: vulnerability-scanning
+  #  image: quay.io/utilitywarehouse/clair-query:update
+  #  environment:
+  #    QUERY_REPO: quay.io/${DRONE_REPO}
+  #
+  - name: build
+    image: docker
+    volumes:
+      - name: dockersock
+        path: /var/run/docker.sock
     commands:
-      - git fetch --tags
+      - docker build -t foo:latest .
 
-  - name: define-image-tags
-    image: alpine
+  - name: test
+    image: foo:latest
+    pull: if-not-exists
     commands:
-      - test -n "${DRONE_TAG}" && echo -n "${DRONE_TAG}," >> .tags || true
-      - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," >> .tags || true
-      - test "${DRONE_BRANCH}" == "master" && echo -n "latest," >> .tags || true
-      - sed -i "s/,$//" .tags
+      - echo bar
 
-  - name: build-and-publish
-    image: plugins/docker
-    settings:
-      username:
-        from_secret: DOCKER_USERNAME
-      password:
-        from_secret: DOCKER_PASSWORD
-      repo: quay.io/${DRONE_REPO}
-      registry: quay.io
-
-  - name: vulnerability-scanning
-    image: quay.io/utilitywarehouse/clair-query
-    environment:
-      QUERY_REPO: quay.io/${DRONE_REPO}
+volumes:
+  - name: dockersock
+    host:
+      path: /var/run/docker.sock
 
 trigger:
   event:
