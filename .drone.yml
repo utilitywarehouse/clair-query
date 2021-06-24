@@ -25,7 +25,10 @@ steps:
       #password:
       #  from_secret: DOCKER_PASSWORD
       repo: foo
+      tags:
+        - test
       dry_run: true
+      purge: false
       #registry: quay.io
 
   #- name: vulnerability-scanning
@@ -33,16 +36,16 @@ steps:
   #  environment:
   #    QUERY_REPO: quay.io/${DRONE_REPO}
   #
-  - name: build
-    image: docker
-    volumes:
-      - name: dockersock
-        path: /var/run/docker.sock
-    commands:
-      - docker build -t foo:latest .
+  #- name: build
+  #  image: docker
+  #  volumes:
+  #    - name: dockersock
+  #      path: /var/run/docker.sock
+  #  commands:
+  #    - docker build -t foo:latest .
 
   - name: test
-    image: foo:latest
+    image: foo:test
     pull: if-not-exists
     commands:
       - echo bar
