@@ -16,10 +16,10 @@ steps:
       dry_run: true
       purge: false
   - name: test
-    image: alpine:hec
-    pull: never
+    image: aquasec/trivy:0.18.3
+    #pull: never
     commands:
-      - echo bar
+      - python:3.4-alpine
 
 trigger:
   event:
