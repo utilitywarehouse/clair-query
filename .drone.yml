@@ -3,6 +3,18 @@ type: kubernetes
 name: default
 
 steps:
+  - name: build-and-publish
+    image: plugins/docker
+    settings:
+      #username:
+      #  from_secret: DOCKER_USERNAME
+      #password:
+      #  from_secret: DOCKER_PASSWORD
+      repo: alpine
+      tags:
+        - hec
+      dry_run: true
+      purge: false
   - name: test
     image: alpine:hec
     pull: never
