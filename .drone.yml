@@ -46,11 +46,11 @@ steps:
     pull: if-not-exists
     commands:
       - echo bar
-
-volumes:
-  - name: dockersock
-    host:
-      path: /var/run/docker.sock
+        #
+        #volumes:
+        #  - name: dockersock
+        #    host:
+        #      path: /var/run/docker.sock
 
 trigger:
   event:
