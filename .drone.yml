@@ -7,7 +7,7 @@ steps:
     image: alpine
     commands:
       - echo -n "trivy,other," > .tags || true
-      - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," > .tags || true
+      - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," >> .tags || true
       - sed -i "s/,$//" .tags
 
   - name: build-and-publish
