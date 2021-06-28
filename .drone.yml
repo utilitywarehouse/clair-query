@@ -3,23 +3,33 @@ type: kubernetes
 name: default
 
 steps:
+  - name: define-image-tags
+    image: alpine
+    commands:
+      - echo -n "trivy,other," > .tags || true
+      - test -n "${DRONE_BRANCH}" && test "${DRONE_BRANCH}" != "master" && echo -n "${DRONE_BRANCH}," > .tags || true
+      - sed -i "s/,$//" .tags
+
   - name: build-and-publish
     image: plugins/docker
     settings:
-      #username:
-      #  from_secret: DOCKER_USERNAME
-      #password:
-      #  from_secret: DOCKER_PASSWORD
-      repo: alpine
-      tags:
-        - hec
-      dry_run: true
-      purge: false
-  - name: test
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      repo: registry.uw.systems/system/test
+      registry: registry.uw.systems
+
+  - name: vulnerability-scanning
     image: aquasec/trivy:0.18.3
-    #pull: never
+    environment:
+      TRIVY_USERNAME:
+        from_secret: DOCKER_USERNAME
+      TRIVY_PASSWORD:
+        from_secret: DOCKER_PASSWORD
     commands:
-      - python:3.4-alpine
+      - TAG=$(cut -d ',' -f1 .tags)
+      - trivy client --remote http://trivy:4954 --exit-code 1 registry.uw.systems/system/test:$${TAG}
 
 trigger:
   event:
